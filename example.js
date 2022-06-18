@@ -4,6 +4,10 @@ const keys = {
   secretKey: 'XXXXXXXXXXXXXXXXXXXXXXXXX',
 }
 
+
+const { BinanceApi, BinanceService } = require('./dist')
+BinanceService.
+
 // 2. you can use api V2 or V3 
 const kuna = require('./dist').v3(keys) // { public:..., private:... }
 const kunaV2 = require('./dist').v2(keys)

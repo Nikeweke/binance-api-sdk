@@ -1,7 +1,6 @@
-import { toQueryParams } from '../utils';
+import { getTimestamp, toQueryParams } from '../utils';
  
 describe('utils: toQueryParams', () => {
-  
   test('should be equal to given string', () => {
     const obj = {
       key2: 'val2',
@@ -10,5 +9,10 @@ describe('utils: toQueryParams', () => {
     const result = 'key2=val2&key1=val1' 
     expect(toQueryParams(obj)).toBe(result);
   });
+});
 
+describe('utils: getTimestamp', () => {
+  test('should be number', () => {
+    expect(typeof getTimestamp() === 'number').toBe(true);
+  });
 });

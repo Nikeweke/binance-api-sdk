@@ -1,7 +1,7 @@
 "use strict";
 const keys = [
-    'KUNA_PUBLIC_KEY',
-    'KUNA_SECRET_KEY',
+    'API_KEY',
+    'SECRET_KEY',
 ];
 // unit tests for env file
 describe('env', () => {

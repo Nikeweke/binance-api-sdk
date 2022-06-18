@@ -11,3 +11,8 @@ describe('utils: toQueryParams', () => {
         expect((0, utils_1.toQueryParams)(obj)).toBe(result);
     });
 });
+describe('utils: getTimestamp', () => {
+    test('should be number', () => {
+        expect(typeof (0, utils_1.getTimestamp)() === 'number').toBe(true);
+    });
+});

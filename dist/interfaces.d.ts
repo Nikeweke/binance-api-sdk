@@ -1,29 +1,48 @@
-import KunaPublicV3 from "./v3/public";
-import KunaPrivateV3 from './v3/private';
-import KunaPublicV2 from "./v2/public";
-import KunaPrivateV2 from './v2/private';
-import { Method } from 'axios';
 interface IKeys {
-    publicKey: string;
+    apiKey: string;
     secretKey: string;
 }
-interface IKunaApiV3 {
-    public: KunaPublicV3;
-    private: KunaPrivateV3;
+declare type AccountBalanceType = "SPOT" | "MARGIN" | "FUTURES";
+declare class Asset {
+    asset: string;
+    free: string;
+    locked: string;
 }
-interface IKunaApiV2 {
-    public: KunaPublicV2;
-    private: KunaPrivateV2;
+declare class Balance extends Asset {
+    free_in_btc: string;
+    locked_in_btc: string;
 }
-interface KunaApiPublic {
-    getTicker(market: string): Promise<any>;
-    getOrderBook(market: string): Promise<any>;
-    getUnixTime(): Promise<number | string>;
-    getHistoryTrades(market: string): Promise<Array<Object>>;
-    request(url_api: string, method: Method, payload: object): Promise<any>;
+interface AccountInfo {
+    accountType: AccountBalanceType;
+    canTrade: boolean;
+    canWithdraw: boolean;
+    canDeposit: boolean;
+    updateTime: number;
+    balances: Array<Asset>;
+    permissions: Array<string>;
 }
-interface KunaApiPrivate {
-    getAccountInfo(): Promise<any>;
-    getOrders(market: string): Promise<any>;
+interface Ticker {
+    symbol: string;
+    price: string;
+    priceChange: string;
+    priceChangePercent: string;
+    weightedAvgPrice: string;
+    prevClosePrice: string;
+    lastPrice: string;
+    lastQty: string;
+    bidPrice: string;
+    bidQty: string;
+    askPrice: string;
+    askQty: string;
+    openPrice: string;
+    highPrice: string;
+    lowPrice: string;
+    volume: string;
+    quoteVolume: string;
+    openTime: number;
+    closeTime: number;
+    firstId: number;
+    lastId: number;
+    count: number;
 }
-export { IKeys, IKunaApiV3, IKunaApiV2, KunaApiPublic, KunaApiPrivate, };
+export { IKeys, AccountBalanceType, AccountInfo, Ticker, Balance, };

@@ -1,0 +1,53 @@
+import { Method } from 'axios';
+import { IKeys, AccountBalanceType, AccountInfo, Ticker } from './interfaces';
+export default class BinanceApi {
+    private api;
+    apiKey: string;
+    secretKey: string;
+    recvWindow: string;
+    constructor({ apiKey, secretKey }: IKeys);
+    /**
+     * Get ticker for 24h change
+     * @param pair
+     * @description https://binance-docs.github.io/apidocs/spot/en/#24hr-ticker-price-change-statistics
+     */
+    getTicker24h(symbol: string): Promise<Ticker>;
+    /**
+     * Get ticker at current moment
+     * @param symbol
+     * @description https://binance-docs.github.io/apidocs/spot/en/#symbol-price-ticker
+     */
+    getTicker(symbol: string): Promise<Ticker>;
+    /**
+     * Return a few tickers24h an once
+     * @param symbols
+     * @param is24h get 24h ticker or current
+     * @returns
+     */
+    getTickers(symbols: Array<string>, is24h?: boolean): Promise<Ticker[]>;
+    /**
+     * Get current average price
+     * @param symbol
+     * @description https://binance-docs.github.io/apidocs/spot/en/#current-average-price
+     */
+    getCurrentAvgPrice(symbol: string): Promise<any>;
+    /**
+     * Get order book
+     * @param symbol
+     * @description
+     */
+    getOrderBook(symbol: string): Promise<any>;
+    /**
+     * Account info and balances of assets
+     * @description https://binance-docs.github.io/apidocs/spot/en/#account-information-user_data
+     */
+    accountInfo(): Promise<AccountInfo>;
+    /**
+     * Daily account balance snapshots
+     * @param startTime unixtime
+     * @param endTime unixtime
+     * @description https://binance-docs.github.io/apidocs/spot/en/#daily-account-snapshot-user_data
+     */
+    dailyAccountSnapshot(startTime: string, endTime: string, type?: AccountBalanceType): Promise<any>;
+    request(action: string, method?: Method, data?: null, options?: {}): Promise<any>;
+}

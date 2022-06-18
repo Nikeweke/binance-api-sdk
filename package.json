@@ -48,7 +48,7 @@
     "dev": "ts-node ./src/interfaces.ts",
     "init-tsconfig": "tsc --init",
     "test-s": "cross-env NODE_ENV=test jest --runInBand --verbose --bail --silent",
-    "test": "cross-env NODE_ENV=test jest --runInBand --verbose --bail"
+    "test": "cross-env NODE_ENV=test jest --runInBand --verbose"
   },
   "dependencies": {
     "axios": "^0.27.2"

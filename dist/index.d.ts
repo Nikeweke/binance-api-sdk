@@ -1,3 +1,3 @@
-import v2 from "./v2";
-import v3 from "./v3";
-export { v2, v3 };
+import BinanceApi from "./api";
+import * as BinanceService from "./service";
+export { BinanceApi, BinanceService };
