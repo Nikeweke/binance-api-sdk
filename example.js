@@ -4,28 +4,21 @@ const keys = {
   secretKey: 'XXXXXXXXXXXXXXXXXXXXXXXXX',
 }
 
-
-const { BinanceApi, BinanceService } = require('./dist')
-BinanceService.
-
-// 2. you can use api V2 or V3 
-const kuna = require('./dist').v3(keys) // { public:..., private:... }
-const kunaV2 = require('./dist').v2(keys)
+// 2. get api or service
+const { binanceApi, BinanceService } = require('./dist').default(keys)
 
 // 3. use 
-kuna.public.getTicker('btcuah')
+binanceApi.getTicker('BTCEUR')
   .then((data) => console.log(data))
   .catch(err => console.log('Error: ', err.message))
 
-kunaV2.public.getTicker('btcuah')
+binanceApi.getTicker24h('BTCUSDC')
   .then((data) => console.log(data))
   .catch(err => console.log('Error: ', err.message))
 
 // set keys before use private functions
-kuna.private.getAccountInfo()
+binanceApi.accountInfo()
   .then((data) => console.log(data))
   .catch(err => console.log('Error: ', err.message))
 
-kunaV2.private.getAccountInfo()
-  .then((data) => console.log(data))
-  .catch(err => console.log('Error: ', err.message))
+BinanceService.getAccountTotalAndBalances(binanceApi)

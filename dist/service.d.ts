@@ -1,6 +1,6 @@
 import BinanceApi from "./api";
 import { Balance } from "./interfaces";
-export { getAccountBalances, };
+export { getAccountTotalAndBalances, };
 /**
  * Get assets balance and total amount of assets pegged to USDC.
  * Supported currency: UAH, EUR, USDC, DAI, USDT, BUSD, BNB,
@@ -12,4 +12,4 @@ export { getAccountBalances, };
  * @param binanceApi instance of binance-api with keys
  * @returns current balances + in total in USDC on binance
  */
-declare function getAccountBalances(binanceApi: BinanceApi): Promise<[number, Balance[]]>;
+declare function getAccountTotalAndBalances(binanceApi: BinanceApi): Promise<[number, Balance[]]>;

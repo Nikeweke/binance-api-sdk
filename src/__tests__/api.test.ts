@@ -40,7 +40,7 @@ describe('BinanceAPI public:', () => {
 });
 
 
-describe('BinanceAPI public:', () => {
+describe('BinanceAPI private:', () => {
   // test('Get account info', async () => {
   //   const api = new BinanceApi(KEYS)
   //   const data = await api.accountInfo()

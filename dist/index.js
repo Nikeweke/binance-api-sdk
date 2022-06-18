@@ -26,8 +26,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BinanceService = exports.BinanceApi = void 0;
 const api_1 = __importDefault(require("./api"));
-exports.BinanceApi = api_1.default;
 const BinanceService = __importStar(require("./service"));
-exports.BinanceService = BinanceService;
+exports.default = (keys) => ({
+    binanceApi: new api_1.default(keys),
+    BinanceService,
+});

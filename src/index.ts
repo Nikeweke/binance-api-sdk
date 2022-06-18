@@ -1,7 +1,9 @@
 import BinanceApi from "./api";
-import * as BinanceService from "./service";
+import { IKeys } from "./interfaces";
+import * as BinanceService from "./services";
 
-export {
-  BinanceApi, 
-  BinanceService
-}
+
+export default (keys: IKeys) => ({
+  binanceApi: new BinanceApi(keys),
+  BinanceService,
+})

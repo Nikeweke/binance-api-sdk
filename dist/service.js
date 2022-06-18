@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getAccountBalances = void 0;
+exports.getAccountTotalAndBalances = void 0;
 var TICKER_MAP;
 (function (TICKER_MAP) {
     TICKER_MAP["UAH"] = "BTCUAH";
@@ -31,7 +31,7 @@ var TICKER_MAP;
  * @param binanceApi instance of binance-api with keys
  * @returns current balances + in total in USDC on binance
  */
-function getAccountBalances(binanceApi) {
+function getAccountTotalAndBalances(binanceApi) {
     return __awaiter(this, void 0, void 0, function* () {
         // compose balances where free or locked is not empty
         const accountInfo = yield binanceApi.accountInfo();
@@ -92,7 +92,7 @@ function getAccountBalances(binanceApi) {
         return [totalInUsdc, balances];
     });
 }
-exports.getAccountBalances = getAccountBalances;
+exports.getAccountTotalAndBalances = getAccountTotalAndBalances;
 // [
 //   { symbol: 'BNBBTC', price: '0.01001900' },      
 //   { symbol: 'BTCUSDT', price: '29792.84000000' }, 

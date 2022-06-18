@@ -1,9 +1,5 @@
-import BinanceApi from "./api"
-import { Ticker, Balance } from "./interfaces"
-
-export {
-  getAccountBalances,
-}
+import BinanceApi from "../api"
+import { Ticker, Balance } from "../interfaces"
 
 enum TICKER_MAP {
   UAH = 'BTCUAH',
@@ -26,7 +22,7 @@ enum TICKER_MAP {
  * @param binanceApi instance of binance-api with keys
  * @returns current balances + in total in USDC on binance
  */
-async function getAccountBalances(binanceApi: BinanceApi) : Promise<[number, Balance[]]> {
+export default async function getAccountTotalAndBalances(binanceApi: BinanceApi) : Promise<[number, Balance[]]> {
   // compose balances where free or locked is not empty
   const accountInfo = await binanceApi.accountInfo()
   const balances = <Record<string, any>>({})
