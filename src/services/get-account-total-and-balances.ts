@@ -1,5 +1,5 @@
 import BinanceApi from "../api"
-import { Ticker, Balance } from "../interfaces"
+import { Ticker, Balance, AccountInfo } from "../interfaces"
 
 enum TICKER_MAP {
   UAH = 'BTCUAH',
@@ -8,8 +8,38 @@ enum TICKER_MAP {
   DAI = 'BTCDAI',
   USDT = 'BTCUSDT',
   BUSD = 'BTCBUSD',
+  RUB = 'BTCRUB',
+  GBP = 'BTCGBP',
+  AUD = 'BTCAUD',
+
   BNB = 'BNBBTC',
+  ETH = 'ETHBTC'
 }
+
+
+const FIATS = <Array<string>>([
+  'UAH',
+  'EUR',
+  'RUB',
+])
+
+const STABLECOINS = <Array<string>>([
+  'USDT',
+  'USDC',
+  'DAI',
+  'BUSD',
+])
+
+enum ASSET_TYPE {
+  CRYPTO,
+  STABLECOIN,
+  FIAT
+}
+
+type ObjectAny = Record<string, any>
+
+// if it is fiat or stablecoin then - BTC / [fiat|stablecoin]
+// if crypto - [crypto] / BTC
 
 /**
  * Get assets balance and total amount of assets pegged to USDC.
@@ -25,7 +55,15 @@ enum TICKER_MAP {
 export default async function getAccountTotalAndBalances(binanceApi: BinanceApi) : Promise<[number, Balance[]]> {
   // compose balances where free or locked is not empty
   const accountInfo = await binanceApi.accountInfo()
-  const balances = <Record<string, any>>({})
+  const balances = composeBalances(accountInfo)
+  const tickers = getTickersForBalances(binanceApi, balances)
+  const totalInBtc = getTotalInBtc(balances, tickers)
+  const totalInCurrency = getTotalInGivenCurrency(tickers, totalInBtc, TICKER_MAP.USDC)
+  return [totalInCurrency, balances as Array<Balance>]
+}
+
+function composeBalances(accountInfo: AccountInfo) : ObjectAny {
+  const balances = <ObjectAny>({})
   for (const balance of accountInfo.balances) {
     if (!(Number(balance.free) > 0) && !(Number(balance.locked) > 0)) {
       continue
@@ -48,50 +86,66 @@ export default async function getAccountTotalAndBalances(binanceApi: BinanceApi)
 
     balances[coinName][moneyType] = amount
   }
+  return balances
+}
 
-  // calculate total balance in USDC
-  // get tickers for all balances
-  const tickers = await binanceApi
+function getTickersForBalances(binanceApi: BinanceApi, balances: ObjectAny) : ObjectAny {
+  return binanceApi
     .getTickers(Object.keys(balances))
     // transform array to object of { coin: price }
-    .then((results: Ticker[]) => results.reduce((prev: Record<string, any>, curr: Ticker) => {
-      const { symbol, price } = curr
-      prev[symbol] = price  
-      return prev
-    }, {})) 
+    .then((results: Ticker[]) => 
+      results.reduce(
+        (prev: ObjectAny, curr: Ticker) => {
+          const { symbol, price } = curr
+          prev[symbol] = price  
+          return prev
+        }, {})
+    ) 
+}
 
-  const getAmountInBtc = (coin: string, amount: string) => {
-    const rate = Number(tickers[TICKER_MAP[coin as keyof typeof TICKER_MAP]])
-    const amountNumber = Number(amount)
-    if (coin === 'BNB') {
-      return amountNumber * rate
-    } else {
-      return amountNumber / rate 
-    }
-  }
-
+function getTotalInBtc(balances: ObjectAny, tickers: ObjectAny) : number {
   let totalInBtc = 0
   const amountFields = ['free', 'savings']
   for (const [coin, balance] of Object.entries(balances)) {
+    // let isFiat, isStablecoin, isCrypto = false
+    let assetType: ASSET_TYPE
+
+    if (FIATS.includes(coin)) {
+      assetType = ASSET_TYPE.FIAT
+    } else if (STABLECOINS.includes(coin)) {
+      assetType = ASSET_TYPE.STABLECOIN
+    } else {
+      assetType = ASSET_TYPE.CRYPTO
+    }
+
     for (const amountField of amountFields) {
       const btcFieldName = `${amountField}_in_btc` 
-
       balances[coin][btcFieldName] = 0
       
       if (Number(balance[amountField]) <= 0) {
         continue
       }
 
-      const amountInBtc = getAmountInBtc(coin, balance[amountField])
+      const rate = Number(tickers[TICKER_MAP[coin as keyof typeof TICKER_MAP]])
+      const amount = Number(balance[amountField])
+      let amountInBtc = 0
+      if (assetType === ASSET_TYPE.FIAT || assetType === ASSET_TYPE.STABLECOIN) {
+        amountInBtc = amount / rate
+      } else {
+        amountInBtc = amount * rate
+      }
+
       balances[coin][btcFieldName] = (amountInBtc).toFixed(8)
       totalInBtc += amountInBtc
     }
-  }
 
-  const totalInUsdc = tickers[TICKER_MAP.USDC] * totalInBtc
-  return [totalInUsdc, balances as Array<Balance>]
+  }
+  return totalInBtc
 }
 
+function getTotalInGivenCurrency(tickers: ObjectAny, totalInBtc: number, currencyName: TICKER_MAP = TICKER_MAP.USDC) : number {
+  return tickers[currencyName] * totalInBtc
+}
 
 // [
 //   { symbol: 'BNBBTC', price: '0.01001900' },      
