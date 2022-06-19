@@ -46,4 +46,16 @@ binanceService.getAccountTotalAndBalances(binanceApi)
 
 ---
 
-### Check out my Binance Ticker Bot on telegram
+### Check out my `@binance_ticker_bot` on telegram 🤖
+
+#### [Link](https://t.me/binance_ticker_bot)
+
+#### Features
+* Get balance with currency rates
+* Get balance with details by each asset
+* Get balance as image 
+* Get currency rates
+* Get chart for during week for currencies
+* Subscribe/unsubscribe on scheduled price updates
+* Add apiKey and secretKey
+
