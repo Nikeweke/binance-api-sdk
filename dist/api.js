@@ -39,7 +39,7 @@ class BinanceApi {
         return (0, axios_1.default)(config).then((r) => r.data);
     }
     /**
-     * Return a few tickers24h an once
+     * Return a few tickers an once
      * @param symbols
      * @param is24h get 24h ticker or current
      * @returns

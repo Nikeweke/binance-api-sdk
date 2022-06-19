@@ -1,7 +1,10 @@
 import axios, { Method, AxiosRequestConfig } from 'axios'
 
 import { getTimestamp, toQueryParamsWithSignature } from './utils'
-import { IKeys, AccountBalanceType, AccountInfo, Ticker } from './interfaces'
+import { 
+  IKeys, AccountBalanceType, AccountInfo, 
+  Ticker, DailyAccountSnapshot, OrderBook 
+} from './interfaces'
 
 
 export default class BinanceApi {
@@ -14,8 +17,6 @@ export default class BinanceApi {
     this.apiKey = apiKey
     this.secretKey = secretKey
   }
-
-
 
   /**
    * Get ticker for 24h change
@@ -46,18 +47,17 @@ export default class BinanceApi {
   } 
     
   /**
-   * Return a few tickers24h an once 
+   * Return a few tickers an once 
    * @param symbols 
    * @param is24h get 24h ticker or current
    * @returns 
    */
-   getTickers(symbols: Array<string>, is24h: boolean = false) : Promise<Ticker[]> {
+  getTickers(symbols: Array<string>, is24h: boolean = false) : Promise<Ticker[]> {
     const tickerFn = is24h ? 'getTicker24h' : 'getTicker'
     return Promise.all(
       symbols.map((pair) => this[tickerFn](pair))
     )
   }
-
 
   /**
    * Get current average price
@@ -78,7 +78,7 @@ export default class BinanceApi {
    * @param symbol 
    * @description
    */
-  getOrderBook(symbol: string) : Promise<any> {
+  getOrderBook(symbol: string) : Promise<OrderBook> {
     const config = {
       method: 'get',
       url: this.api + '/api/v3/depth?symbol=' + symbol,
@@ -93,7 +93,7 @@ export default class BinanceApi {
    * Account info and balances of assets 
    * @description https://binance-docs.github.io/apidocs/spot/en/#account-information-user_data
    */
-   accountInfo() : Promise<AccountInfo> {
+  accountInfo() : Promise<AccountInfo> {
     const queryParams = toQueryParamsWithSignature({
       recvWindow: this.recvWindow,
       timestamp: getTimestamp(),
@@ -107,7 +107,7 @@ export default class BinanceApi {
    * @param endTime unixtime
    * @description https://binance-docs.github.io/apidocs/spot/en/#daily-account-snapshot-user_data
    */
-  dailyAccountSnapshot(startTime: string, endTime: string, type: AccountBalanceType = 'SPOT') : Promise<any> {
+  dailyAccountSnapshot(startTime: number, endTime: number, type: AccountBalanceType = 'SPOT') : Promise<DailyAccountSnapshot> {
     const queryParams = toQueryParamsWithSignature({
       type,
       recvWindow: this.recvWindow,

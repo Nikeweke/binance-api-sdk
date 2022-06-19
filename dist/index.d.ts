@@ -1,8 +1,8 @@
-import BinanceApi from "./api";
 import { IKeys } from "./interfaces";
-import * as BinanceService from "./service";
+import BinanceService from "./service/index";
+import BinanceApi from "./api";
 declare const _default: (keys: IKeys) => {
     binanceApi: BinanceApi;
-    BinanceService: typeof BinanceService;
+    binanceService: BinanceService;
 };
 export default _default;

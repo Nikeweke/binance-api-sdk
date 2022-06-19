@@ -1,11 +1,13 @@
 // 1. init a keys
 const keys = {
-  publicKey: 'XXXXXXXXXXXXXXXXXXXXXXXXX',
+  apiKey: 'XXXXXXXXXXXXXXXXXXXXXXXXX',
   secretKey: 'XXXXXXXXXXXXXXXXXXXXXXXXX',
 }
 
-// 2. get api or service
-const { binanceApi, BinanceService } = require('./dist').default(keys)
+
+// 2. get api and service
+const { binanceApi, binanceService } = require('./dist').default(keys)
+
 
 // 3. use 
 binanceApi.getTicker('BTCEUR')
@@ -21,4 +23,8 @@ binanceApi.accountInfo()
   .then((data) => console.log(data))
   .catch(err => console.log('Error: ', err.message))
 
-BinanceService.getAccountTotalAndBalances(binanceApi)
+binanceService.getAccountTotalAndBalances()
+  .then((data) => console.log(data))
+  .catch(err => console.log(err))
+
+

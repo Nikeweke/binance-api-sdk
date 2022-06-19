@@ -1,26 +1,27 @@
-interface IKeys {
+export interface IKeys {
   apiKey: string
   secretKey: string
 }
 
-type AccountBalanceType = 
+export type AccountBalanceType = 
   | "SPOT" 
   | "MARGIN" 
   | "FUTURES"
 
-class Asset {
+export class Asset {
   asset: string = '' // name 
   free: string = ''
   locked: string = ''
+  savings: string = ''
 }
 
 // same that asset by have BTC fields 
-class Balance extends Asset {
+export class Balance extends Asset {
   free_in_btc: string = ''
   locked_in_btc: string = ''
 }
 
-interface AccountInfo {
+export interface AccountInfo {
   accountType: AccountBalanceType
   canTrade: boolean
   canWithdraw: boolean
@@ -31,7 +32,7 @@ interface AccountInfo {
   // here is not all fields are listed
 }
 
-interface Ticker {
+export interface Ticker {
   symbol: string
 
   // ticker fields
@@ -60,11 +61,26 @@ interface Ticker {
   count: number        // Trade count
 }
 
-export {
-  IKeys,
 
-  AccountBalanceType,
-  AccountInfo,
-  Ticker,
-  Balance,
+export interface Data {
+  balances: Asset[]
+  totalAssetOfBtc: string
 }
+export interface SnapshotVos {
+  data: Data
+  type: string
+  updateTime: number
+}
+export interface DailyAccountSnapshot {
+  code: number
+  msg: string
+  snapshotVos: SnapshotVos[]
+}
+
+
+export interface OrderBook {
+  lastUpdateId: number
+  bids: string[][]
+  asks: string[][]
+}
+

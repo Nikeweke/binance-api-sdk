@@ -45,7 +45,7 @@
   "name": "binance-api-sdk",
   "scripts": {
     "build": "tsc",
-    "dev": "ts-node ./src/interfaces.ts",
+    "dev": "ts-node example-ts.ts",
     "init-tsconfig": "tsc --init",
     "test-s": "cross-env NODE_ENV=test jest --runInBand --verbose --bail --silent",
     "test": "cross-env NODE_ENV=test jest --runInBand --verbose"

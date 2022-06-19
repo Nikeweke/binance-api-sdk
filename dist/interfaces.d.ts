@@ -1,18 +1,19 @@
-interface IKeys {
+export interface IKeys {
     apiKey: string;
     secretKey: string;
 }
-declare type AccountBalanceType = "SPOT" | "MARGIN" | "FUTURES";
-declare class Asset {
+export declare type AccountBalanceType = "SPOT" | "MARGIN" | "FUTURES";
+export declare class Asset {
     asset: string;
     free: string;
     locked: string;
+    savings: string;
 }
-declare class Balance extends Asset {
+export declare class Balance extends Asset {
     free_in_btc: string;
     locked_in_btc: string;
 }
-interface AccountInfo {
+export interface AccountInfo {
     accountType: AccountBalanceType;
     canTrade: boolean;
     canWithdraw: boolean;
@@ -21,7 +22,7 @@ interface AccountInfo {
     balances: Array<Asset>;
     permissions: Array<string>;
 }
-interface Ticker {
+export interface Ticker {
     symbol: string;
     price: string;
     priceChange: string;
@@ -45,4 +46,22 @@ interface Ticker {
     lastId: number;
     count: number;
 }
-export { IKeys, AccountBalanceType, AccountInfo, Ticker, Balance, };
+export interface Data {
+    balances: Asset[];
+    totalAssetOfBtc: string;
+}
+export interface SnapshotVos {
+    data: Data;
+    type: string;
+    updateTime: number;
+}
+export interface DailyAccountSnapshot {
+    code: number;
+    msg: string;
+    snapshotVos: SnapshotVos[];
+}
+export interface OrderBook {
+    lastUpdateId: number;
+    bids: string[][];
+    asks: string[][];
+}

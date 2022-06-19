@@ -14,36 +14,50 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_1 = __importDefault(require("../api"));
 const KEYS = {
-    apiKey: process.env.KUNA_PUBLIC_KEY || '',
-    secretKey: process.env.KUNA_SECRET_KEY || '',
+    apiKey: process.env.API_KEY || '',
+    secretKey: process.env.SECRET_KEY || '',
 };
-describe('BinanceAPI public:', () => {
+describe('BinanceAPI Public:', () => {
+    let binanceApi;
+    beforeAll(() => {
+        binanceApi = new api_1.default(KEYS);
+    });
     test('Get ticker', () => __awaiter(void 0, void 0, void 0, function* () {
-        const api = new api_1.default(KEYS);
         const symbol = 'BTCEUR';
-        const data = yield api.getTicker(symbol);
+        const data = yield binanceApi.getTicker(symbol);
         expect(data.symbol === symbol).toBe(true);
         expect(typeof data.price === 'string').toBe(true);
     }));
     test('Get ticker24h', () => __awaiter(void 0, void 0, void 0, function* () {
-        const api = new api_1.default(KEYS);
         const symbol = 'BTCEUR';
-        const data = yield api.getTicker24h(symbol);
+        const data = yield binanceApi.getTicker24h(symbol);
         expect(data.symbol === symbol).toBe(true);
         expect(Number(data.lastPrice) > 0).toBe(true);
     }));
-    // test('Get account info', async () => {
-    //   const api = new BinanceApi(KEYS)
-    //   const data = await api.accountInfo()
-    //   expect(data.balances.length !== 0).toBe(true);
-    //   expect(typeof data.updateTime === 'number').toBe(true);
-    // });
+    test('Get Order book', () => __awaiter(void 0, void 0, void 0, function* () {
+        const symbol = 'BTCEUR';
+        const data = yield binanceApi.getOrderBook(symbol);
+        expect(typeof data.lastUpdateId === 'number').toBe(true);
+        expect(data.bids.length > 0).toBe(true);
+        expect(data.asks.length > 0).toBe(true);
+    }));
 });
-describe('BinanceAPI private:', () => {
-    // test('Get account info', async () => {
-    //   const api = new BinanceApi(KEYS)
-    //   const data = await api.accountInfo()
-    //   expect(data.balances.length !== 0).toBe(true);
-    //   expect(typeof data.updateTime === 'number').toBe(true);
-    // });
+describe('BinanceAPI Private:', () => {
+    let binanceApi;
+    beforeAll(() => {
+        binanceApi = new api_1.default(KEYS);
+    });
+    test('Account info', () => __awaiter(void 0, void 0, void 0, function* () {
+        const data = yield binanceApi.accountInfo();
+        expect(data.balances.length !== 0).toBe(true);
+        expect(typeof data.updateTime === 'number').toBe(true);
+    }));
+    test('Daily account snapshot', () => __awaiter(void 0, void 0, void 0, function* () {
+        const dayInMs = '86400000';
+        const startTime = Date.now() - Number(dayInMs);
+        const endTime = Date.now();
+        const data = yield binanceApi.dailyAccountSnapshot(startTime, endTime);
+        expect(data.snapshotVos[0].data.balances.length !== 0).toBe(true);
+        expect(data.code === 200).toBe(true);
+    }));
 });

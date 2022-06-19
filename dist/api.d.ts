@@ -1,5 +1,5 @@
 import { Method } from 'axios';
-import { IKeys, AccountBalanceType, AccountInfo, Ticker } from './interfaces';
+import { IKeys, AccountBalanceType, AccountInfo, Ticker, DailyAccountSnapshot, OrderBook } from './interfaces';
 export default class BinanceApi {
     private api;
     apiKey: string;
@@ -19,7 +19,7 @@ export default class BinanceApi {
      */
     getTicker(symbol: string): Promise<Ticker>;
     /**
-     * Return a few tickers24h an once
+     * Return a few tickers an once
      * @param symbols
      * @param is24h get 24h ticker or current
      * @returns
@@ -36,7 +36,7 @@ export default class BinanceApi {
      * @param symbol
      * @description
      */
-    getOrderBook(symbol: string): Promise<any>;
+    getOrderBook(symbol: string): Promise<OrderBook>;
     /**
      * Account info and balances of assets
      * @description https://binance-docs.github.io/apidocs/spot/en/#account-information-user_data
@@ -48,6 +48,6 @@ export default class BinanceApi {
      * @param endTime unixtime
      * @description https://binance-docs.github.io/apidocs/spot/en/#daily-account-snapshot-user_data
      */
-    dailyAccountSnapshot(startTime: string, endTime: string, type?: AccountBalanceType): Promise<any>;
+    dailyAccountSnapshot(startTime: number, endTime: number, type?: AccountBalanceType): Promise<DailyAccountSnapshot>;
     request(action: string, method?: Method, data?: null, options?: {}): Promise<any>;
 }

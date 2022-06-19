@@ -1,13 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Balance = void 0;
+exports.Balance = exports.Asset = void 0;
 class Asset {
     constructor() {
         this.asset = ''; // name 
         this.free = '';
         this.locked = '';
+        this.savings = '';
     }
 }
+exports.Asset = Asset;
 // same that asset by have BTC fields 
 class Balance extends Asset {
     constructor() {
