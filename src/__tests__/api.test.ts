@@ -1,4 +1,4 @@
-import { IKeys } from '../interfaces';
+import { IKeys, Balance } from '../interfaces';
 import BinanceApi from '../api'
  
 const KEYS: IKeys = {
@@ -63,6 +63,15 @@ describe('BinanceAPI Private:', () => {
 
     expect(data.snapshotVos[0].data.balances.length !== 0).toBe(true);
     expect(data.code === 200).toBe(true);
+  });
+
+  test('Get account total and balances in USDC', async () => {
+    const [ total, balances ] : [number, Balance[]] = await binanceApi
+      .getAccountTotalAndBalances()
+
+    expect(typeof total === 'number').toBe(true);
+    expect(total > 0).toBe(true)
+    expect(Object.keys(balances).length > 0).toBe(true)
   });
 
 

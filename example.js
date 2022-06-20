@@ -6,7 +6,7 @@ const keys = {
 
 
 // 2. get api and service
-const { binanceApi, binanceService } = require('./dist').default(keys)
+const binanceApi = require('./dist').init(keys)
 
 
 // 3. use 
@@ -23,7 +23,7 @@ binanceApi.accountInfo()
   .then((data) => console.log(data))
   .catch(err => console.log('Error: ', err.message))
 
-binanceService.getAccountTotalAndBalances()
+binanceApi.getAccountTotalAndBalances()
   .then((data) => console.log(data))
   .catch(err => console.log(err))
 

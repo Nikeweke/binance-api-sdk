@@ -60,4 +60,11 @@ describe('BinanceAPI Private:', () => {
         expect(data.snapshotVos[0].data.balances.length !== 0).toBe(true);
         expect(data.code === 200).toBe(true);
     }));
+    test('Get account total and balances in USDC', () => __awaiter(void 0, void 0, void 0, function* () {
+        const [total, balances] = yield binanceApi
+            .getAccountTotalAndBalances();
+        expect(typeof total === 'number').toBe(true);
+        expect(total > 0).toBe(true);
+        expect(Object.keys(balances).length > 0).toBe(true);
+    }));
 });

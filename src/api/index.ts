@@ -1,10 +1,13 @@
 import axios, { Method, AxiosRequestConfig } from 'axios'
 
-import { getTimestamp, toQueryParamsWithSignature } from './utils'
+import { getTimestamp, toQueryParamsWithSignature } from '../utils'
 import { 
   IKeys, AccountBalanceType, AccountInfo, 
-  Ticker, DailyAccountSnapshot, OrderBook 
-} from './interfaces'
+  Ticker, DailyAccountSnapshot, OrderBook, Balance
+} from '../interfaces'
+
+// extra handlers 
+import getAccountTotalAndBalances from './get-account-total-and-balances'
 
 
 export default class BinanceApi {
@@ -116,6 +119,15 @@ export default class BinanceApi {
       timestamp: getTimestamp(),
     }, this.secretKey)
     return this.request('/sapi/v1/accountSnapshot' + queryParams)
+  }
+
+  /**
+   * Get account total in "displayCurrency" and assets balances 
+   * @param displayCurrency currency in which display total
+   * @description [extra handler]
+   */
+  getAccountTotalAndBalances(displayCurrency: string = 'USDC') : Promise<[number, Balance[]]> {
+    return getAccountTotalAndBalances(this, displayCurrency)
   }
 
   request(action: string, method: Method = 'get', data = null, options = {}) : Promise<any> {

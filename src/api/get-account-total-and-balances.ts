@@ -1,4 +1,4 @@
-import BinanceApi from "../api"
+import BinanceApi from "."
 import { Ticker, Balance, AccountInfo } from "../interfaces"
 
 // enum TICKER_MAP {
