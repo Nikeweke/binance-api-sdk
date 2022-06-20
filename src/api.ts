@@ -122,13 +122,13 @@ export default class BinanceApi {
     const config = <AxiosRequestConfig>({
       method,
       url: this.api + action,
-      headers: { 
-        'Content-Type': 'application/json',
-        'X-MBX-APIKEY': this.apiKey,
-      },
+      headers: {},
       ...options,
     });
 
+    if (this.apiKey) {
+      config.headers!['X-MBX-APIKEY'] = this.apiKey
+    }
     if (data) {
       config.data = JSON.stringify(data)
     }
