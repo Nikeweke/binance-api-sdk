@@ -7,4 +7,3 @@ exports.init = void 0;
 const api_1 = __importDefault(require("./api"));
 const init = (keys) => new api_1.default(keys);
 exports.init = init;
-// export default 

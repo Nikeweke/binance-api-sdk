@@ -106,6 +106,9 @@ function composeBalances(accountInfo) {
 function fillTickerMapAndSymbols(balances) {
     // loop over asset names
     for (const assetName of Object.keys(balances)) {
+        if (assetName === GENERAL_CURRENCY) {
+            continue;
+        }
         let assetType = getAssetTypeByName(assetName);
         let isFiatOrStablecoin = assetType === ASSET_TYPE.FIAT ||
             assetType === ASSET_TYPE.STABLECOIN;
@@ -150,14 +153,19 @@ function getTotalInBtc(balances, tickers) {
             if (Number(balance[amountField]) <= 0) {
                 continue;
             }
-            const rate = Number(tickers[TICKER_MAP[assetName]]);
-            const amount = Number(balance[amountField]);
             let amountInBtc = 0;
-            if (assetType === ASSET_TYPE.FIAT || assetType === ASSET_TYPE.STABLECOIN) {
-                amountInBtc = amount / rate;
+            const amount = Number(balance[amountField]);
+            if (assetName === GENERAL_CURRENCY) {
+                amountInBtc = amount;
             }
             else {
-                amountInBtc = amount * rate;
+                const rate = Number(tickers[TICKER_MAP[assetName]]);
+                if (assetType === ASSET_TYPE.FIAT || assetType === ASSET_TYPE.STABLECOIN) {
+                    amountInBtc = amount / rate;
+                }
+                else {
+                    amountInBtc = amount * rate;
+                }
             }
             balances[assetName][btcFieldName] = (amountInBtc).toFixed(8);
             totalInBtc += amountInBtc;
