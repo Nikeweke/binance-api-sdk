@@ -10,7 +10,7 @@ const keys = {
 }
 
 // 2. get api and service
-const { binanceApi, binanceService } = require('./dist').default(keys)
+const binanceApi = require('./dist').init(keys)
 
 // 3. use 
 binanceApi.getTicker('BTCEUR')
@@ -26,7 +26,7 @@ binanceApi.accountInfo()
   .then((data) => console.log(data))
   .catch(err => console.log('Error: ', err.message))
 
-binanceService.getAccountTotalAndBalances(binanceApi)
+binanceApi.getAccountTotalAndBalances()
   .then((data) => console.log(data))
   .catch(err => console.log(err))
 ```
@@ -39,10 +39,8 @@ binanceService.getAccountTotalAndBalances(binanceApi)
 * `.getOrderBook('BTCUSDC')` - order book for symbol
 * `.accountInfo()` -  (private) account info and assets' balances
 * `.dailyAccountSnapshot(startTime: number, endTime: number, type: AccountBalanceType = 'SPOT')` - (private) snapshot of your account balances (startTime, endTime - it is unixtime in milliseconds)
-* `.request(action: string, method: Method = 'get', data = null, options = {})` -  make request to binance api
-
-#### binanceService.
 * `.getAccountTotalAndBalances(displayCurrency: string = 'USDC')` - Get total of your assets in *displayCurrency*
+* `.request(action: string, method: Method = 'get', data = null, options = {})` -  make request to binance api
 
 ---
 
