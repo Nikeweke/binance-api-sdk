@@ -32,6 +32,7 @@ binanceApi.getAccountTotalAndBalances()
 ```
 
 #### binanceApi.
+* `.isKeysSet()` - check if keys are set (secret, api keys)
 * `.getTicker('BTCEUR')` - last updates of market
 * `.getTicker24h('BTCUSDC')` - last updates of market for 24h
 * `.getTickers(['BTCUSDC', 'BTCEUR'])` - get a few tickers at once 
@@ -49,10 +50,11 @@ binanceApi.getAccountTotalAndBalances()
 #### [Link](https://t.me/binance_ticker_bot)
 
 #### Features
-* Set apiKey and secretKey for recieving your balance
+* Set your binance keys for checking your balance
 * Get balance with currency rates
 * Get balance with details by each asset
 * Get currency rates
+* Settings
 * Send feedback about bot
 * Subscribe/unsubscribe on scheduled price updates
 

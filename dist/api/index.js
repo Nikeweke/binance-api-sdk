@@ -15,6 +15,12 @@ class BinanceApi {
         this.secretKey = secretKey;
     }
     /**
+     * Check if keys are set
+     */
+    isKeysSet() {
+        return this.apiKey.length > 0 && this.secretKey.length > 0;
+    }
+    /**
      * Get ticker for 24h change
      * @param pair
      * @description https://binance-docs.github.io/apidocs/spot/en/#24hr-ticker-price-change-statistics

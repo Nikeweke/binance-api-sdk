@@ -7,6 +7,10 @@ export default class BinanceApi {
     recvWindow: string;
     constructor({ apiKey, secretKey }: IKeys);
     /**
+     * Check if keys are set
+     */
+    isKeysSet(): boolean;
+    /**
      * Get ticker for 24h change
      * @param pair
      * @description https://binance-docs.github.io/apidocs/spot/en/#24hr-ticker-price-change-statistics

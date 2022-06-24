@@ -1,4 +1,4 @@
-import axios, { Method, AxiosRequestConfig } from 'axios'
+import axios, { Method, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 import { getTimestamp, toQueryParamsWithSignature } from '../utils'
 import { 
@@ -19,6 +19,13 @@ export default class BinanceApi {
   constructor({ apiKey = '', secretKey = '' }: IKeys) {
     this.apiKey = apiKey
     this.secretKey = secretKey
+  }
+
+  /**
+   * Check if keys are set
+   */
+  isKeysSet() : boolean {
+    return this.apiKey.length > 0 && this.secretKey.length > 0 
   }
 
   /**
@@ -145,7 +152,12 @@ export default class BinanceApi {
       config.data = JSON.stringify(data)
     }
 
-    return axios.request(config).then((res) => res.data)
+    return axios.request(config).then((res: AxiosResponse) => { 
+      return {
+        responseStatus: res.status,
+        ...res.data
+      }
+    })
   }
 }
 
