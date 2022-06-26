@@ -1,3 +1,4 @@
 import { IKeys } from "./interfaces";
 import BinanceApi from "./api";
-export declare const init: (keys: IKeys) => BinanceApi;
+declare const _default: (keys: IKeys) => BinanceApi;
+export default _default;

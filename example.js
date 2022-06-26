@@ -4,9 +4,8 @@ const keys = {
   secretKey: 'XXXXXXXXXXXXXXXXXXXXXXXXX',
 }
 
-
 // 2. get api and service
-const binanceApi = require('./dist').init(keys)
+const binanceApi = require('./dist').default(keys)
 
 
 // 3. use 
