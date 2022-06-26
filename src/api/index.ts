@@ -152,12 +152,7 @@ export default class BinanceApi {
       config.data = JSON.stringify(data)
     }
 
-    return axios.request(config).then((res: AxiosResponse) => { 
-      return {
-        responseStatus: res.status,
-        ...res.data
-      }
-    })
+    return axios.request(config).then((res: AxiosResponse) => res.data)
   }
 }
 
