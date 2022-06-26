@@ -34,7 +34,7 @@
   },
   "homepage": "https://github.com/Nikeweke/binance-api-sdk",
   "deprecated": false,
-  "description": "Kuna api sdk - V3, V2",
+  "description": "Binance API SDK",
   "keywords": [
     "binance",
     "cryptocurrency",
