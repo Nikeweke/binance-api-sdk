@@ -10,7 +10,7 @@ const keys = {
 }
 
 // 2. get api and service
-const binanceApi = require('./dist').init(keys)
+const binanceApi = require('binance-api-sdk').default(keys)
 
 // 3. use 
 binanceApi.getTicker('BTCEUR')
