@@ -8,6 +8,7 @@ import {
 
 // extra handlers 
 import getAccountTotalAndBalances from './get-account-total-and-balances'
+import { DISPLAY_CURRENCIES } from './consts'
 
 
 export default class BinanceApi {
@@ -133,7 +134,7 @@ export default class BinanceApi {
    * @param displayCurrency currency in which display total
    * @description [extra handler]
    */
-  getAccountTotalAndBalances(displayCurrency: string = 'USDC') : Promise<[number, Balance[]]> {
+  getAccountTotalAndBalances(displayCurrency: DISPLAY_CURRENCIES) : Promise<[number, Balance[]]> {
     return getAccountTotalAndBalances(this, displayCurrency)
   }
 

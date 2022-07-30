@@ -1,54 +1,21 @@
 import BinanceApi from "."
 import { Ticker, Balance, AccountInfo } from "../interfaces"
-
-// enum TICKER_MAP {
-//   UAH = 'BTCUAH',
-//   EUR = 'BTCEUR',
-//   USDC = 'BTCUSDC',
-//   DAI = 'BTCDAI',
-//   USDT = 'BTCUSDT',
-//   BUSD = 'BTCBUSD',
-//   RUB = 'BTCRUB',
-//   GBP = 'BTCGBP',
-//   AUD = 'BTCAUD',
-
-//   BNB = 'BNBBTC',
-//   ETH = 'ETHBTC'
-// }
-
-
-const FIATS = <Array<string>>([
-  'UAH',
-  'EUR',
-  'RUB',
-])
-
-const STABLECOINS = <Array<string>>([
-  'USDT',
-  'USDC',
-  'DAI',
-  'BUSD',
-])
-
-enum ASSET_TYPE {
-  CRYPTO,
-  STABLECOIN,
-  FIAT
-}
-
-type ObjectAny = Record<string, any>
+import {
+  FIATS,
+  STABLECOINS,
+  ASSET_TYPE,
+  DISPLAY_CURRENCIES,
+  ObjectAny,
+} from './consts'
 
 // if it is fiat or stablecoin then - BTC / [fiat|stablecoin]
 // if crypto - [crypto] / BTC
-
-
 
 // holds reverse map of values { assetName(DAI, USDC, ...): tickerSymbol(BTCUAH, BTCUSDC, BNBBTC)}
 let TICKER_MAP: Record<string, string> = {}
 let TICKER_SYMBOLS: Array<string> = []
 
 const GENERAL_CURRENCY = 'BTC'
-let DISPLAY_CURRENCY = ''
 
 /**
  * Get assets balance and total amount of assets pegged to USDC.
@@ -60,17 +27,15 @@ let DISPLAY_CURRENCY = ''
  *  
  * @returns current balances + in total in USDC on binance
  */
-export default async function getAccountTotalAndBalances(binanceApi: BinanceApi, displayCurrency: string = 'USDC') : Promise<[number, Balance[]]> {
-  DISPLAY_CURRENCY = displayCurrency
-  
+export default async function getAccountTotalAndBalances(binanceApi: BinanceApi, displayCurrency: DISPLAY_CURRENCIES) : Promise<[number, Balance[]]> {
   try {
     // compose balances where free or locked is not empty
     const accountInfo = await binanceApi.accountInfo()
     const balances = composeBalances(accountInfo)
-    fillTickerMapAndSymbols(balances)
+    fillTickerMapAndSymbols(balances, displayCurrency)
     const tickers = await getTickersForBalances(binanceApi)
     const totalInBtc = getTotalInBtc(balances, tickers)
-    const totalInCurrency = getTotalInGivenCurrency(tickers, totalInBtc, DISPLAY_CURRENCY)
+    const totalInCurrency = getTotalInGivenCurrency(tickers, totalInBtc, displayCurrency)
     return [totalInCurrency, balances as Array<Balance>]
  
   } catch(err) {
@@ -112,8 +77,12 @@ function composeBalances(accountInfo: AccountInfo) : ObjectAny {
   return balances
 }
 
-function fillTickerMapAndSymbols(balances: ObjectAny) {
+function fillTickerMapAndSymbols(balances: ObjectAny, displayCurrency: DISPLAY_CURRENCIES) {
   // loop over asset names
+  let keys = Object.keys(balances)
+  keys.push(displayCurrency)
+  keys = [...new Set(keys)]; // removing the duplicates
+
   for (const assetName of Object.keys(balances)) {
     if (assetName === GENERAL_CURRENCY) {
       continue
@@ -193,8 +162,8 @@ function getTotalInBtc(balances: ObjectAny, tickers: ObjectAny) : number {
   return totalInBtc
 }
 
-function getTotalInGivenCurrency(tickers: ObjectAny, totalInBtc: number, currencyName: string) : number {
-  return tickers[TICKER_MAP[currencyName]] * totalInBtc
+function getTotalInGivenCurrency(tickers: ObjectAny, totalInBtc: number, displayCurrency: DISPLAY_CURRENCIES) : number {
+  return tickers[TICKER_MAP[displayCurrency]] * totalInBtc
 }
 
 // [

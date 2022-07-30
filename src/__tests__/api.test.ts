@@ -1,5 +1,6 @@
 import { IKeys, Balance } from '../interfaces';
 import BinanceApi from '../api'
+import { DISPLAY_CURRENCIES } from '../index'
  
 const KEYS: IKeys = {
   apiKey: process.env.API_KEY || '',
@@ -67,7 +68,7 @@ describe('BinanceAPI Private:', () => {
 
   test('Get account total and balances in USDC', async () => {
     const [ total, balances ] : [number, Balance[]] = await binanceApi
-      .getAccountTotalAndBalances()
+      .getAccountTotalAndBalances(DISPLAY_CURRENCIES.USDT)
 
     expect(typeof total === 'number').toBe(true);
     expect(total > 0).toBe(true)
