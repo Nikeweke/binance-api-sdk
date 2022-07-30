@@ -13,6 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const api_1 = __importDefault(require("../api"));
+const index_1 = require("../index");
 const KEYS = {
     apiKey: process.env.API_KEY || '',
     secretKey: process.env.SECRET_KEY || '',
@@ -62,7 +63,7 @@ describe('BinanceAPI Private:', () => {
     }));
     test('Get account total and balances in USDC', () => __awaiter(void 0, void 0, void 0, function* () {
         const [total, balances] = yield binanceApi
-            .getAccountTotalAndBalances();
+            .getAccountTotalAndBalances(index_1.DISPLAY_CURRENCIES.USDT);
         expect(typeof total === 'number').toBe(true);
         expect(total > 0).toBe(true);
         expect(Object.keys(balances).length > 0).toBe(true);

@@ -1,5 +1,6 @@
 import { Method } from 'axios';
 import { IKeys, AccountBalanceType, AccountInfo, Ticker, DailyAccountSnapshot, OrderBook, Balance } from '../interfaces';
+import { DISPLAY_CURRENCIES } from './consts';
 export default class BinanceApi {
     private api;
     apiKey: string;
@@ -58,6 +59,6 @@ export default class BinanceApi {
      * @param displayCurrency currency in which display total
      * @description [extra handler]
      */
-    getAccountTotalAndBalances(displayCurrency?: string): Promise<[number, Balance[]]>;
+    getAccountTotalAndBalances(displayCurrency: DISPLAY_CURRENCIES): Promise<[number, Balance[]]>;
     request(action: string, method?: Method, data?: null, options?: {}): Promise<any>;
 }

@@ -9,43 +9,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// enum TICKER_MAP {
-//   UAH = 'BTCUAH',
-//   EUR = 'BTCEUR',
-//   USDC = 'BTCUSDC',
-//   DAI = 'BTCDAI',
-//   USDT = 'BTCUSDT',
-//   BUSD = 'BTCBUSD',
-//   RUB = 'BTCRUB',
-//   GBP = 'BTCGBP',
-//   AUD = 'BTCAUD',
-//   BNB = 'BNBBTC',
-//   ETH = 'ETHBTC'
-// }
-const FIATS = ([
-    'UAH',
-    'EUR',
-    'RUB',
-]);
-const STABLECOINS = ([
-    'USDT',
-    'USDC',
-    'DAI',
-    'BUSD',
-]);
-var ASSET_TYPE;
-(function (ASSET_TYPE) {
-    ASSET_TYPE[ASSET_TYPE["CRYPTO"] = 0] = "CRYPTO";
-    ASSET_TYPE[ASSET_TYPE["STABLECOIN"] = 1] = "STABLECOIN";
-    ASSET_TYPE[ASSET_TYPE["FIAT"] = 2] = "FIAT";
-})(ASSET_TYPE || (ASSET_TYPE = {}));
+const consts_1 = require("./consts");
 // if it is fiat or stablecoin then - BTC / [fiat|stablecoin]
 // if crypto - [crypto] / BTC
 // holds reverse map of values { assetName(DAI, USDC, ...): tickerSymbol(BTCUAH, BTCUSDC, BNBBTC)}
 let TICKER_MAP = {};
 let TICKER_SYMBOLS = [];
 const GENERAL_CURRENCY = 'BTC';
-let DISPLAY_CURRENCY = '';
 /**
  * Get assets balance and total amount of assets pegged to USDC.
  * Supported currency: UAH, EUR, USDC, DAI, USDT, BUSD, BNB,
@@ -56,17 +26,16 @@ let DISPLAY_CURRENCY = '';
  *
  * @returns current balances + in total in USDC on binance
  */
-function getAccountTotalAndBalances(binanceApi, displayCurrency = 'USDC') {
+function getAccountTotalAndBalances(binanceApi, displayCurrency) {
     return __awaiter(this, void 0, void 0, function* () {
-        DISPLAY_CURRENCY = displayCurrency;
         try {
             // compose balances where free or locked is not empty
             const accountInfo = yield binanceApi.accountInfo();
             const balances = composeBalances(accountInfo);
-            fillTickerMapAndSymbols(balances);
+            fillTickerMapAndSymbols(balances, displayCurrency);
             const tickers = yield getTickersForBalances(binanceApi);
             const totalInBtc = getTotalInBtc(balances, tickers);
-            const totalInCurrency = getTotalInGivenCurrency(tickers, totalInBtc, DISPLAY_CURRENCY);
+            const totalInCurrency = getTotalInGivenCurrency(tickers, totalInBtc, displayCurrency);
             return [totalInCurrency, balances];
         }
         catch (err) {
@@ -103,15 +72,18 @@ function composeBalances(accountInfo) {
     }
     return balances;
 }
-function fillTickerMapAndSymbols(balances) {
+function fillTickerMapAndSymbols(balances, displayCurrency) {
     // loop over asset names
+    let keys = Object.keys(balances);
+    keys.push(displayCurrency);
+    keys = [...new Set(keys)]; // removing the duplicates
     for (const assetName of Object.keys(balances)) {
         if (assetName === GENERAL_CURRENCY) {
             continue;
         }
         let assetType = getAssetTypeByName(assetName);
-        let isFiatOrStablecoin = assetType === ASSET_TYPE.FIAT ||
-            assetType === ASSET_TYPE.STABLECOIN;
+        let isFiatOrStablecoin = assetType === consts_1.ASSET_TYPE.FIAT ||
+            assetType === consts_1.ASSET_TYPE.STABLECOIN;
         let symbol = isFiatOrStablecoin
             ? GENERAL_CURRENCY + assetName
             : assetName + GENERAL_CURRENCY;
@@ -121,14 +93,14 @@ function fillTickerMapAndSymbols(balances) {
     }
 }
 function getAssetTypeByName(assetName) {
-    if (FIATS.includes(assetName)) {
-        return ASSET_TYPE.FIAT;
+    if (consts_1.FIATS.includes(assetName)) {
+        return consts_1.ASSET_TYPE.FIAT;
     }
-    else if (STABLECOINS.includes(assetName)) {
-        return ASSET_TYPE.STABLECOIN;
+    else if (consts_1.STABLECOINS.includes(assetName)) {
+        return consts_1.ASSET_TYPE.STABLECOIN;
     }
     else {
-        return ASSET_TYPE.CRYPTO;
+        return consts_1.ASSET_TYPE.CRYPTO;
     }
 }
 function getTickersForBalances(binanceApi) {
@@ -160,7 +132,7 @@ function getTotalInBtc(balances, tickers) {
             }
             else {
                 const rate = Number(tickers[TICKER_MAP[assetName]]);
-                if (assetType === ASSET_TYPE.FIAT || assetType === ASSET_TYPE.STABLECOIN) {
+                if (assetType === consts_1.ASSET_TYPE.FIAT || assetType === consts_1.ASSET_TYPE.STABLECOIN) {
                     amountInBtc = amount / rate;
                 }
                 else {
@@ -173,8 +145,8 @@ function getTotalInBtc(balances, tickers) {
     }
     return totalInBtc;
 }
-function getTotalInGivenCurrency(tickers, totalInBtc, currencyName) {
-    return tickers[TICKER_MAP[currencyName]] * totalInBtc;
+function getTotalInGivenCurrency(tickers, totalInBtc, displayCurrency) {
+    return tickers[TICKER_MAP[displayCurrency]] * totalInBtc;
 }
 // [
 //   { symbol: 'BNBBTC', price: '0.01001900' },      

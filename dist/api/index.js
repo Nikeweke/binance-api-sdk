@@ -115,7 +115,7 @@ class BinanceApi {
      * @param displayCurrency currency in which display total
      * @description [extra handler]
      */
-    getAccountTotalAndBalances(displayCurrency = 'USDC') {
+    getAccountTotalAndBalances(displayCurrency) {
         return (0, get_account_total_and_balances_1.default)(this, displayCurrency);
     }
     request(action, method = 'get', data = null, options = {}) {
