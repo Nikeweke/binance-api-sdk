@@ -44,22 +44,3 @@ binanceApi.getAccountTotalAndBalances()
 * `.request(action: string, method: Method = 'get', data = null, options = {})` -  make request to binance api
 
 ---
-
-### Check out my `@binance_ticker_bot` on telegram 🤖
-
-#### [Link](https://t.me/binance_ticker_bot)
-
-#### Features
-* Set your binance keys for checking your balance
-* Get balance with currency rates
-* Get balance with details by each asset
-* Get currency rates
-* Settings
-* Send feedback about bot
-* Subscribe/unsubscribe on scheduled price updates
-
-### Want to say thanks? Buy me a beer 🍻
-
-* Bitcoin - `1JCsimNNavpdHwiMx2PDkVbaNcCT95WbKN`
-* ERC20 (ETH, USDC, etc.) - `0xb04bb0214cca83b3e47401832213c37c3731a9c7`
-
